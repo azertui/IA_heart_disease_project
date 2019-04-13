@@ -119,7 +119,7 @@ public class NeuralNet {
   public float testPrediction() {
     //int currentDataIndex = 0;
     float cost = 0.f;
-    int countPredictions = 0;
+    int countPredictions = 0,VP = 0,FP = 0,FN = 0,VN = 0;
     
     /* TODO Part 4, Q.3 */
     for(int i=0;i<testingData.length;i++)
@@ -136,11 +136,27 @@ public class NeuralNet {
     for (int k = 0; k < K; k++)
       for (int c = 0; c < batchSize; c++) {
         cost += Y_test[k][c]*Math.log(A2[k][c]);
-        if(NNLib.checkPrediction(A2, Y_test, c))
+        if(NNLib.checkPrediction(A2, Y_test, c)) {
         	countPredictions++;
+        	if(Y_test[k][c] == 1.0 )
+        		VP ++;
+        	else
+        		VN++;
+        }
+        else if(Y_test[k][c] == 1.0 )
+        	FN++;
+        else
+        	FP++;
       }
     cost = -(1.f/batchSize)*cost;
     System.out.println("predict="+(countPredictions));
+    System.out.println("Pourcentage de prédictions correctes ="+(countPredictions/batchSize)*100);
+    System.out.println("Pourcentage de faux positifs ="+(FP/batchSize)*100);
+    System.out.println("Pourcentage de faux négatifs ="+(FN/batchSize)*100);
+    System.out.println("Pourcentage de vrais positifs ="+(VP/batchSize)*100);
+    System.out.println("Pourcentage de vrais négatifs ="+(VN/batchSize)*100);
+
+    
     float accuracy = 100.f*countPredictions/(K*batchSize);
     System.out.println("  CE cost on test data: "  + cost);
     System.out.println("  Accuracy on test data: " + accuracy);

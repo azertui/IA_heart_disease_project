@@ -15,9 +15,8 @@ public class NeuralNet {
   private int nbClasses;
   private int batchSize;
   
-  private float[][] X_train, Y_train, X_test, Y_test, W1, W2, b1, b2;
+  private float[][] X_train, Y_train, X_test, Y_test, W1, W2, b1, b2, Wmid, bmid;
   private float eta = 0.01f;
-  private int h1Size;
   private boolean Has1HLayer;
 
   /**
@@ -31,8 +30,8 @@ public class NeuralNet {
     nbFeatures  = data[0].length;
     this.batchSize = batchSize;
     this.nbClasses = K;
-    this.h1Size=h1Size;
     this.Has1HLayer=Has1HLayer;
+    int h1S=h1Size;
     
     int trainingSize = (int) (nbInstances*0.75);
     int testingSize  = nbInstances-trainingSize;
@@ -52,12 +51,16 @@ public class NeuralNet {
     
     X_test  = new float[this.nbFeatures-1][this.batchSize];
     Y_test  = new float[this.nbClasses][this.batchSize];
-    
-    W1 = new float[h1Size][13]; NNLib.initMatrix(W1);
-    b1 = new float[h1Size][1]; for (int i = 0; i < b1.length; i++) Arrays.fill(b1[i], 0.f);
-    
-    W2 = new float[1][h1Size]; NNLib.initMatrix(W2);
+    W1 = new float[h1S][13]; NNLib.initMatrix(W1);
+    b1 = new float[h1S][1]; for (int i = 0; i < b1.length; i++) Arrays.fill(b1[i], 0.f);
+    W2 = new float[1][h1S]; NNLib.initMatrix(W2);
     b2 = new float[1][1]; for (int i = 0; i < b2.length; i++) Arrays.fill(b2[i], 0.f);
+    if(!Has1HLayer){
+    	Wmid=new float[h1S][h1S]; NNLib.initMatrix(Wmid);
+    	bmid = new float[h1S][1];
+    	W2 = new float[1][h1S]; NNLib.initMatrix(W2);
+    	b2 = new float[1][1]; for (int i = 0; i < b2.length; i++) Arrays.fill(b2[i], 0.f);
+    }
   }
   
   @SuppressWarnings("unused")
@@ -129,10 +132,16 @@ public class NeuralNet {
     for(int i=0;i<testingData.length;i++)
     	loadAttributesAndLabels(testingData,X_test,Y_test,i,batchSize);
     //On effectue une passe
-    float[][] Z1,A1,Z2,A2;
+    float[][] Z1,A1,Z2,A2,Zmid,Amid;
     Z1 = NNLib.addVec(NNLib.mult(W1, X_test), b1);
 	A1=NNLib.relu(Z1);
-	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
+	if(this.Has1HLayer) {
+    	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
+    }else {
+    		Zmid=NNLib.addVec(NNLib.mult(Wmid, A1), bmid);
+    		Amid=NNLib.relu(Zmid);
+    		Z2=NNLib.addVec(NNLib.mult(W2, Amid), b2);
+    	}
 	A2=NNLib.sigmoid(Z2);
 	//Calcul
 	int batchSize = A2[0].length;
@@ -173,7 +182,7 @@ public class NeuralNet {
   private float trainingEpoch(){
     int seenTrainingData = 0;
     shuffleTrainingData(); // shuffle the data before training
-    float [][] Z1,A1,Z2,A2,delta1,delta2,dW2,dW1,db1,db2;
+    float [][] Z1,A1,Z2,A2,Amid = null,Zmid,delta1,delta2,deltamid,dW2,dW1,dWmid = null,db1,db2,dbmid = null;
     /* TODO Part 4, Q.2 */
     for(;seenTrainingData<trainingData.length;seenTrainingData++) {
     	for(int i=0;i<trainingData.length;i++) {
@@ -182,28 +191,46 @@ public class NeuralNet {
     	//propagation avant
     	Z1=NNLib.addVec(NNLib.mult(W1, X_train), b1);
     	A1=NNLib.relu(Z1);
+    	if(this.Has1HLayer) {
     	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
+    	}else {
+    		Zmid=NNLib.addVec(NNLib.mult(Wmid, A1), bmid);
+    		Amid=NNLib.relu(Zmid);
+    		Z2=NNLib.addVec(NNLib.mult(W2, Amid), b2);
+    	}
     	A2=NNLib.sigmoid(Z2);
-    	//System.out.println("training error: "+trainingError);
     	//Retropropagation de l'erreur
     	delta2=NNLib.subtract(A2,Y_train);
-    	//delta2=NNLib.subtract(trainingError,A2);
-    	dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
+    	if(this.Has1HLayer) {
+    		dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
+    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.reluDeriv(A1));
+    	}else {
+    		dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(Amid)), 1.0f/(float)trainingData.length);
+    		deltamid=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.reluDeriv(Amid));
+    		dWmid=NNLib.mult(NNLib.mult(deltamid,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
+    		dbmid=deltamid;
+    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(Wmid), deltamid), NNLib.reluDeriv(A1));
+    	}
     	db2=delta2;
-    	delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.reluDeriv(A1));
     	dW1=NNLib.mult(NNLib.mult(delta1,NNLib.transpose(X_train)), 1.0f/(float)trainingData.length);
     	db1=delta1;
-    	/*if(seenTrainingData==0) {
-    		NNLib.printMatrix(Z2);
-    		NNLib.printMatrix(A2);
-    		NNLib.printMatrix(Y_train);
-    		NNLib.printMatrix(delta2, "delta2");
-    	}*/
+    	if(seenTrainingData==0) {
+    		int t=0;
+    		for(int i=0;i<Y_train[0].length;i++) {
+    			if(NNLib.checkPrediction(A2,Y_train,i))
+    				t++;
+    		}
+    		System.out.println("training: "+t);
+    	}
     	//Mise a jour des paramÃ¨tres
     	W2=NNLib.subtract(W2, NNLib.mult(dW2, this.eta));
     	b2=NNLib.subtract(b2, NNLib.mult(db2, this.eta));
     	W1=NNLib.subtract(W1, NNLib.mult(dW1, this.eta));
     	b1=NNLib.subtract(b1, NNLib.mult(db1, this.eta));
+    	if(!this.Has1HLayer) {
+    		Wmid=NNLib.subtract(Wmid, NNLib.mult(dWmid, this.eta));
+    		bmid=NNLib.subtract(bmid, NNLib.mult(dbmid, this.eta));
+    	}
     }
     return testPrediction();
   }

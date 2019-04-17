@@ -62,19 +62,19 @@ public class NNLib {
 	  float moyenne=0.f, e_type=0.f;
 	  for(int i=0; i<indices.length;i++) {
 		  //calcul de la moyenne
-		  for(int k=0;k<data.length;k++) {
-			  moyenne+=data[k][indices[i]];
+		  for(int k=0;k<data[0].length;k++) {
+			  moyenne+=data[indices[i]][k];
 		  }
-		  moyenne=moyenne/data.length;
+		  moyenne=moyenne/data[0].length;
 		  //calcul de l'écart-type
-		  for(int k=0;k<data.length;k++) {
-			  e_type+=Math.pow((data[k][indices[i]]-moyenne), 2);
+		  for(int k=0;k<data[0].length;k++) {
+			  e_type+=Math.pow((data[indices[i]][k]-moyenne), 2);
 		  }
-		  e_type=e_type/data.length;
+		  e_type=e_type/data[0].length;
 		  e_type=(float) Math.sqrt(e_type);
 		  //Normalisation
-		  for(int k=0;k<data.length;k++) {
-			  data[k][indices[i]]=(data[k][indices[i]]-moyenne)/e_type;
+		  for(int k=0;k<data[0].length;k++) {
+			  data[indices[i]][k]=(data[indices[i]][k]-moyenne)/e_type;
 		  }
 	  }
   }

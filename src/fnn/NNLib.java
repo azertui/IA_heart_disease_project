@@ -58,7 +58,7 @@ public class NNLib {
    * @param data	données à traiter
    * @param indices	tableau contenant les indices des colonnes à normaliser
    */
-  public void normalize(float[][] data, int[] indices) {
+  public static void normalize(float[][] data, int[] indices) {
 	  float moyenne=0.f, e_type=0.f;
 	  for(int i=0; i<indices.length;i++) {
 		  //calcul de la moyenne
@@ -89,22 +89,7 @@ public class NNLib {
   public static float[][] tanhDeriv(float[][] tanhA) {
     return subtract(1, power(tanhA, 2));
   }
-  
-  /**
-   * Compute the partial derivative of tanh function by WX
-   * @param tanh float matrix
-   * @param matrix of derivation variables
-   * @return matrix
-   */
-  public static float[][] tanhDerivPartielle(float[][]tanhA,float[][]X,float[][]W){
-	  float[][] res = new float[X.length][X[0].length];
-	  for(int i = 0; i<res.length;i++) {
-		  for(int j=0;j<res[0].length;j++) {
-			  
-		  }
-	  }
-	  return res;
-  }
+ 
   
   /**
    * Compute the hyperbolic secant
@@ -172,6 +157,21 @@ public class NNLib {
   }
   
   /**
+   * Apply a sigmoid on weighted inputs (for output only)
+   * @param Z matrix of weighted inputs
+   * @return matrix of activations
+   */
+  public static float[][] sigmoid(float[][] Z){
+    float[][] sigA = new float[Z.length][Z[0].length];
+    for(int i=0;i<sigA.length;i++) {
+    	for(int j=0;j<sigA[0].length;j++) {
+    		sigA[i][j]= 1.0f/(1.0f + (float)Math.exp(-Z[i][j]));
+    	}
+    }
+    return sigA;
+  }
+  
+  /**
    * Test if hypothesis matches actual labels
    * @param Yhat hypothesis
    * @param Y    actual labels
@@ -179,9 +179,11 @@ public class NNLib {
    * @return
    */
   public static boolean checkPrediction(float[][] Yhat, float[][] Y, int indexInBatch){
-    if(Yhat[0][indexInBatch]==Y[0][indexInBatch]) {
+    if(Yhat[0][indexInBatch]>=0.5f && Y[0][indexInBatch]==1.0f) {
     	return true;
-    }else {
+    }else if(Yhat[0][indexInBatch]<0.5f && Y[0][indexInBatch]==0.0f) {
+    	return true;
+    }else{
     	return false;
     }
   }

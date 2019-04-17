@@ -9,9 +9,9 @@ public class Main {
     
     //DataLib.printData();
     
-    NeuralNet nn = new NeuralNet(data, 4 /*batchSize*/, 1 /*nb classes*/);
+    NeuralNet nn = new NeuralNet(data, 20 /*batchSize*/, 1 /*nb classes*/,10 /*nb neurons in h1 */, true /* has 1 hidden layer */);
 
-    nn.train(2/*nb of epochs*/);
+    nn.train(500/*nb of epochs*/);
   }
 
 }

@@ -134,12 +134,12 @@ public class NeuralNet {
     //On effectue une passe
     float[][] Z1,A1,Z2,A2,Zmid,Amid;
     Z1 = NNLib.addVec(NNLib.mult(W1, X_test), b1);
-	A1=NNLib.relu(Z1);
+	A1=NNLib.leakyRelu(Z1);
 	if(this.Has1HLayer) {
     	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
     }else {
     		Zmid=NNLib.addVec(NNLib.mult(Wmid, A1), bmid);
-    		Amid=NNLib.relu(Zmid);
+    		Amid=NNLib.leakyRelu(Zmid);
     		Z2=NNLib.addVec(NNLib.mult(W2, Amid), b2);
     	}
 	A2=NNLib.sigmoid(Z2);
@@ -162,7 +162,7 @@ public class NeuralNet {
         	FP++;
       }
     cost = -(1.f/batchSize)*cost;
-    System.out.println("predict="+(countPredictions));
+    System.out.println("test: "+(countPredictions));
     System.out.println("Pourcentage de prédictions correctes ="+(((float)countPredictions)/(float)batchSize)*100.0f);
     System.out.println("Pourcentage de faux positifs ="+(((float)FP)/(float)batchSize)*100.0f);
     System.out.println("Pourcentage de faux négatifs ="+(((float)FN)/(float)batchSize)*100.0f);
@@ -190,12 +190,12 @@ public class NeuralNet {
     	}
     	//propagation avant
     	Z1=NNLib.addVec(NNLib.mult(W1, X_train), b1);
-    	A1=NNLib.relu(Z1);
+    	A1=NNLib.leakyRelu(Z1);
     	if(this.Has1HLayer) {
     	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
     	}else {
     		Zmid=NNLib.addVec(NNLib.mult(Wmid, A1), bmid);
-    		Amid=NNLib.relu(Zmid);
+    		Amid=NNLib.leakyRelu(Zmid);
     		Z2=NNLib.addVec(NNLib.mult(W2, Amid), b2);
     	}
     	A2=NNLib.sigmoid(Z2);
@@ -203,13 +203,13 @@ public class NeuralNet {
     	delta2=NNLib.subtract(A2,Y_train);
     	if(this.Has1HLayer) {
     		dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
-    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.reluDeriv(A1));
+    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.leakyReluDeriv(A1));
     	}else {
     		dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(Amid)), 1.0f/(float)trainingData.length);
-    		deltamid=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.reluDeriv(Amid));
+    		deltamid=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.leakyReluDeriv(Amid));
     		dWmid=NNLib.mult(NNLib.mult(deltamid,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
     		dbmid=deltamid;
-    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(Wmid), deltamid), NNLib.reluDeriv(A1));
+    		delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(Wmid), deltamid), NNLib.leakyReluDeriv(A1));
     	}
     	db2=delta2;
     	dW1=NNLib.mult(NNLib.mult(delta1,NNLib.transpose(X_train)), 1.0f/(float)trainingData.length);

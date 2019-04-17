@@ -114,6 +114,32 @@ public class NNLib {
   }
   
   /**
+   * Activate weighted input with ReLU function
+   * @param Z matrix of activated weighted input
+   * @return matrix of activations
+   */
+  public static float[][] leakyRelu(float[][] Z){
+    float[][] activations = new float[Z.length][Z[0].length];
+    for (int i = 0; i < Z.length; i++)
+      for (int j = 0; j < Z[0].length; j++)
+        activations[i][j] = Z[i][j] > 0 ? Z[i][j] : 0.1f *Z[i][j];
+    return activations;
+  }
+  
+  /**
+   * Derivative of ReLU function
+   * @param A matrix of activations
+   * @return matrix
+   */
+  public static float[][] leakyReluDeriv(float[][] A){
+    float[][] C = new float[A.length][A[0].length];
+    for (int i = 0; i < A.length; i++)
+      for (int j = 0; j < A[0].length; j++)
+        C[i][j] = A[i][j] > 0 ? 1 : 0.1f;
+    return C;
+  }
+  
+  /**
    * Activate weighted input with Binary step function
    * @param Z matrix of activated weighted input
    * @return matrix of activations

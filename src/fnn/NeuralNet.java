@@ -129,7 +129,7 @@ public class NeuralNet {
     Z1 = NNLib.addVec(NNLib.mult(W1, X_test), b1);
 	A1=NNLib.tanh(Z1);
 	Z2=NNLib.addVec(NNLib.mult(W2, A1), b2);
-	A2=NNLib.softmax(Z2);
+	A2=NNLib.bstep(Z2);
 	//Calcul
 	int batchSize = A2[0].length;
 	int K = Y_test.length; // # classes
@@ -138,23 +138,23 @@ public class NeuralNet {
         cost += Y_test[k][c]*Math.log(A2[k][c]);
         if(NNLib.checkPrediction(A2, Y_test, c)) {
         	countPredictions++;
-        	if(Y_test[k][c] == 1.0 )
+        	if(Y_test[k][c] == 1.0f )
         		VP ++;
         	else
         		VN++;
         }
-        else if(Y_test[k][c] == 1.0 )
+        else if(Y_test[k][c] == 1.0f )
         	FN++;
         else
         	FP++;
       }
     cost = -(1.f/batchSize)*cost;
     System.out.println("predict="+(countPredictions));
-    System.out.println("Pourcentage de prédictions correctes ="+(countPredictions/batchSize)*100);
-    System.out.println("Pourcentage de faux positifs ="+(FP/batchSize)*100);
-    System.out.println("Pourcentage de faux négatifs ="+(FN/batchSize)*100);
-    System.out.println("Pourcentage de vrais positifs ="+(VP/batchSize)*100);
-    System.out.println("Pourcentage de vrais négatifs ="+(VN/batchSize)*100);
+    System.out.println("Pourcentage de prédictions correctes ="+(((float)countPredictions)/(float)batchSize)*100.0f);
+    System.out.println("Pourcentage de faux positifs ="+(((float)FP)/(float)batchSize)*100.0f);
+    System.out.println("Pourcentage de faux négatifs ="+(((float)FN)/(float)batchSize)*100.0f);
+    System.out.println("Pourcentage de vrais positifs ="+(((float)VP)/(float)batchSize)*100.0f);
+    System.out.println("Pourcentage de vrais négatifs ="+(((float)VN)/(float)batchSize)*100.0f);
 
     
     float accuracy = 100.f*countPredictions/(K*batchSize);
@@ -192,22 +192,23 @@ public class NeuralNet {
     	trainingError=NNLib.crossEntropy(Y_train,A2);
     	//System.out.println("training error: "+trainingError);
     	//Retropropagation de l'erreur
-    	delta2=NNLib.subtract(A2,trainingError);
+    	delta2=NNLib.subtract(A2,Y_train);
     	//delta2=NNLib.subtract(trainingError,A2);
-    	dW2=NNLib.mult(delta2,NNLib.transpose(A1));
+    	dW2=NNLib.mult(NNLib.mult(delta2,NNLib.transpose(A1)), 1.0f/(float)trainingData.length);
     	db2=delta2;
-    	delta1=NNLib.hadamard(NNLib.mult(W2, delta2),NNLib.tanhDeriv(A1));
-    	if(seenTrainingData==0) {
-    		//System.out.println("print de début pour vérif:");
-    		//System.out.println(testPrediction());
-    	}
-    	dW1=NNLib.mult(delta1, NNLib.transpose(X_train));
+    	delta1=NNLib.hadamard(NNLib.mult(NNLib.transpose(W2), delta2), NNLib.tanhDeriv(A1));
+    	dW1=NNLib.mult(NNLib.mult(delta1,NNLib.transpose(X_train)), 1.0f/(float)trainingData.length);
     	db1=delta1;
+    	if(seenTrainingData==0) {
+    		NNLib.printMatrix(delta2,"delta2");
+    		NNLib.printMatrix(dW2,"dW2");
+    		NNLib.printMatrix(delta1,"delta1");
+    	}
     	//Mise a jour des paramÃ¨tres
     	W2=NNLib.subtract(W2, NNLib.mult(dW2, this.eta));
-    	b2=NNLib.subtract(b2, NNLib.mult(db2, eta));
+    	b2=NNLib.subtract(b2, NNLib.mult(db2, this.eta));
     	W1=NNLib.subtract(W1, NNLib.mult(dW1, this.eta));
-    	b1=NNLib.subtract(b1, NNLib.mult(db1, eta));
+    	b1=NNLib.subtract(b1, NNLib.mult(db1, this.eta));
     }
     return testPrediction();
   }

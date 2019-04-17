@@ -7,11 +7,11 @@ public class Main {
     // Copy data from file, shuffle them and write them in 2D array
     float[][] data = DataLib.copyDataToArray("heart_disease_dataset.data" /*filename*/, "," /*separator*/);
     
-    DataLib.printData();
+    //DataLib.printData();
     
-    NeuralNet nn = new NeuralNet(data, 1 /*batchSize*/, 1 /*nb classes*/);
+    NeuralNet nn = new NeuralNet(data, 4 /*batchSize*/, 1 /*nb classes*/);
 
-    nn.train(50/*nb of epochs*/);
+    nn.train(2/*nb of epochs*/);
   }
 
 }

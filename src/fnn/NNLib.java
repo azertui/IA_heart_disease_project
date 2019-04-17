@@ -91,6 +91,31 @@ public class NNLib {
   }
   
   /**
+   * Compute the partial derivative of tanh function by WX
+   * @param tanh float matrix
+   * @param matrix of derivation variables
+   * @return matrix
+   */
+  public static float[][] tanhDerivPartielle(float[][]tanhA,float[][]X,float[][]W){
+	  float[][] res = new float[X.length][X[0].length];
+	  for(int i = 0; i<res.length;i++) {
+		  for(int j=0;j<res[0].length;j++) {
+			  
+		  }
+	  }
+	  return res;
+  }
+  
+  /**
+   * Compute the hyperbolic secant
+   * @param float z
+   * @return float sech(z)
+   */
+  public static float sech(float z) {
+	  return (float) ( 2.f / (Math.exp(z)+Math.exp(-z)));
+  }
+  
+  /**
    * Activate weighted input with ReLU function
    * @param Z matrix of activated weighted input
    * @return matrix of activations
@@ -100,6 +125,19 @@ public class NNLib {
     for (int i = 0; i < Z.length; i++)
       for (int j = 0; j < Z[0].length; j++)
         activations[i][j] = Z[i][j] > 0 ? Z[i][j] : 0;
+    return activations;
+  }
+  
+  /**
+   * Activate weighted input with Binary step function
+   * @param Z matrix of activated weighted input
+   * @return matrix of activations
+   */
+  public static float[][] bstep(float[][] Z){
+    float[][] activations = new float[Z.length][Z[0].length];
+    for (int i = 0; i < Z.length; i++)
+      for (int j = 0; j < Z[0].length; j++)
+        activations[i][j] = Z[i][j] >= 0 ? 1 : 0;
     return activations;
   }
   
@@ -132,17 +170,6 @@ public class NNLib {
     }
     return softA;
   }
-
-  /**
-   * Applies a softmax partial derivative to a sotmax output
-   * @param A softmax output matrix
-   * @param W weights for derivation
-   */
-  public static float[][] softmaxDerivative(float[][] A, float[][] W){
-	  float[][] res= new float[W.length][W[0].length];
-	  
-	  return res;
-  }
   
   /**
    * Test if hypothesis matches actual labels
@@ -152,14 +179,11 @@ public class NNLib {
    * @return
    */
   public static boolean checkPrediction(float[][] Yhat, float[][] Y, int indexInBatch){
-    int predK = 0;
-    int actualK = 0;
-    for (int k = 1; k < Yhat.length; k++){
-      if (Yhat[k][indexInBatch] > Yhat[predK][indexInBatch]) predK = k;
-      if (Y[k][indexInBatch] > Yhat[actualK][indexInBatch]) actualK = k;
+    if(Yhat[0][indexInBatch]==Y[0][indexInBatch]) {
+    	return true;
+    }else {
+    	return false;
     }
-    //System.out.println("Actual k: "+actualK+" Predicted k: "+predK+" ("+ (actualK==predK) +")");
-    return actualK == predK;
   }
   
   /* ************************************* *
@@ -217,6 +241,20 @@ public class NNLib {
       for (int j = 0; j < A[0].length; j++){
         C[i][j] = A[i][j] + B[i][0];
       }
+    }
+    return C;
+  }
+  
+  /**
+   * returns axis i of A as a matrix stored vector
+   * @param A
+   * @param i
+   * @return V
+   */
+  public static float[][] getAxis(float[][] A, int i){
+    float[][] C = new float[A.length][1];
+    for (int k = 0; k < A.length; k++){
+        C[k][0] = A[k][i];
     }
     return C;
   }

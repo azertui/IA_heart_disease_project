@@ -42,10 +42,17 @@ max_heart_rate_achieved.
 
 ==== Réseau de neurones avec 1 route cachée
 
-===== 1 unité
+===== 5 unités
 
 . En entrée on va avoir une matrice de taille 13*1, 13 étant le nombre de
 paramètres. Pour les matrices de paramètres on va également avoir du 13*1 et
 enfin en sortie on aura une matrice d'1*1.
 
 image::nn.jpg[]
+
+
+===== 10 unités
+
+. Pas de changement.
+
+image::nn10.jpg[]

@@ -111,8 +111,8 @@ image::nn10.jpg[]
 
 ===== Questions
 
-Pour 10 unités sur la couche cachée, on obtient les matrices d'entrée 10x1 et 1x1,
-les matrices de poids 10x13 et 1x10 et les matrices de sortie 10x1 et 1x1
+pour 2 couches cachées de 5 neurones chacune, on obtient les matrices d'entrées
+de taille 5x1, 5x1 et 1x1, de poids 5x13, 5x5 et 1x5 et les matrices de sortie 5x1, 5x1 et 1x1
 
 image::2couches.jpg[]
 
@@ -138,3 +138,7 @@ image::2couches.jpg[]
 * Pourcentage de faux négatifs =0.0%
 * Pourcentage de vrais positifs =25.0%
 * Pourcentage de vrais négatifs =75.0%
+
+Le modèle qui nous semble le plus pertinent est le modèle à deux couches cachées
+ et avec un grand nombre d'époque.Les pourcentages obtenus avec ce modèle varient
+ moins que les autres.

@@ -32,7 +32,7 @@ public class NeuralNet {
     this.nbClasses = K;
     this.Has1HLayer=Has1HLayer;
     int h1S=h1Size;
-    
+    int[] indices= {0,3,4,7,9};
     int trainingSize = (int) (nbInstances*0.75);
     int testingSize  = nbInstances-trainingSize;
     trainingData = new float[trainingSize][nbFeatures];
@@ -45,6 +45,9 @@ public class NeuralNet {
     for (int i = 0; i < testingSize; i++)
       for (int j = 0; j < data[0].length; j++)
         testingData[i][j] = data[i+trainingSize][j];
+    //On normalise les jeux de données
+    NNLib.normalize(trainingData, indices);
+    NNLib.normalize(testingData, indices);
     
     X_train = new float[this.nbFeatures-1][this.batchSize];  // -1 because the last column is the label
     Y_train = new float[this.nbClasses][this.batchSize];
@@ -89,8 +92,8 @@ public class NeuralNet {
     for(k=0;k<dataSet[indexInBatch].length-1;k++) {
     	X[k][indexInBatch]=dataSet[dataIndex][k];
     }
-    int[] indices= {0,3,4,7,9};
-    NNLib.normalize(X,indices);
+    //int[] indices= {0,3,4,7,9};
+    //NNLib.normalizeX(X,indices);
     // 2. Load data labels in Y (create a one-hot for class prediction)
     //Load label in Y
     Y[0][indexInBatch]=dataSet[dataIndex][k];

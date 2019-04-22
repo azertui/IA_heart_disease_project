@@ -45,7 +45,7 @@ public class NeuralNet {
     for (int i = 0; i < testingSize; i++)
       for (int j = 0; j < data[0].length; j++)
         testingData[i][j] = data[i+trainingSize][j];
-    //On normalise les jeux de donn�es
+    //On normalise les jeux de donn�es
     NNLib.normalize(trainingData, indices);
     NNLib.normalize(testingData, indices);
     
@@ -165,11 +165,11 @@ public class NeuralNet {
         	FP++;
       }
     cost = -(1.f/batchSize)*cost;
-    System.out.println("Pourcentage de prédictions correctes ="+(((float)countPredictions)/(float)batchSize)*100.0f);
-    System.out.println("Pourcentage de faux positifs ="+(((float)FP)/(float)batchSize)*100.0f);
-    System.out.println("Pourcentage de faux négatifs ="+(((float)FN)/(float)batchSize)*100.0f);
-    System.out.println("Pourcentage de vrais positifs ="+(((float)VP)/(float)batchSize)*100.0f);
-    System.out.println("Pourcentage de vrais négatifs ="+(((float)VN)/(float)batchSize)*100.0f);
+    System.out.println("Pourcentage de prédictions correctes ="+(((float)countPredictions)/(float)batchSize)*100.0f + "%");
+    System.out.println("Pourcentage de faux positifs ="+(((float)FP)/(float)batchSize)*100.0f + "%");
+    System.out.println("Pourcentage de faux négatifs ="+(((float)FN)/(float)batchSize)*100.0f + "%");
+    System.out.println("Pourcentage de vrais positifs ="+(((float)VP)/(float)batchSize)*100.0f + "%");
+    System.out.println("Pourcentage de vrais négatifs ="+(((float)VN)/(float)batchSize)*100.0f + "%");
     float accuracy = 100.f*countPredictions/(K*batchSize);
     return accuracy;
   }

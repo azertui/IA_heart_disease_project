@@ -44,15 +44,97 @@ max_heart_rate_achieved.
 
 ===== 5 unités
 
-. En entrée on va avoir une matrice de taille 13*1, 13 étant le nombre de
-paramètres. Pour les matrices de paramètres on va également avoir du 13*1 et
-enfin en sortie on aura une matrice d'1*1.
+====== Questions
+
+Pour des lots de taille 1 et 5 neurones sur la couche cachée avec 13 paramètres,
+on obtient les matrices d'entrée de taille 5x1 et 1x1,
+les matrices de poids de tailles 5x13 et 1x5 et les matrices de sortie de taille 5x1 et 1x1
 
 image::nn.jpg[]
 
+====== Mise en oeuvre
+
+. 100 époques :
+* Pourcentage de prédictions correctes =50.0%
+* Pourcentage de faux positifs =50.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =25.0%
+
+. 200 époques :
+* Pourcentage de prédictions correctes =75.0%
+* Pourcentage de faux positifs =0.0%
+* Pourcentage de faux négatifs =25.0%
+* Pourcentage de vrais positifs =0.0%
+* Pourcentage de vrais négatifs =75.0%
+
+. 500 époques :
+* Pourcentage de prédictions correctes =75.0%
+* Pourcentage de faux positifs =25.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =50.0%
 
 ===== 10 unités
 
-. Pas de changement.
+====== Questions
+
+Pour 10 unités sur la couche cachée, on obtient les matrices d'entrée 10x1 et 1x1,
+les matrices de poids 10x13 et 1x10 et les matrices de sortie 10x1 et 1x1
 
 image::nn10.jpg[]
+
+====== Mise en oeuvre
+
+. 100 époques :
+* Pourcentage de prédictions correctes =50.0%
+* Pourcentage de faux positifs =25.0%
+* Pourcentage de faux négatifs =25.0%
+* Pourcentage de vrais positifs =0.0%
+* Pourcentage de vrais négatifs =50.0%
+
+. 200 époques :
+* Pourcentage de prédictions correctes =50.0%
+* Pourcentage de faux positifs =50.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =25.0%
+
+. 500 époques :
+* Pourcentage de prédictions correctes =75.0%
+* Pourcentage de faux positifs =0.0%
+* Pourcentage de faux négatifs =25.0%
+* Pourcentage de vrais positifs =0.0%
+* Pourcentage de vrais négatifs =75.0%
+
+==== Réseau de neurones avec 2 routes cachées à 5 neurones chacune
+
+===== Questions
+
+Pour 10 unités sur la couche cachée, on obtient les matrices d'entrée 10x1 et 1x1,
+les matrices de poids 10x13 et 1x10 et les matrices de sortie 10x1 et 1x1
+
+image::2couches.jpg[]
+
+===== Mise en oeuvre
+
+. 100 époques :
+* Pourcentage de prédictions correctes =25.0%
+* Pourcentage de faux positifs =75.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =0.0%
+
+. 200 époques :
+* Pourcentage de prédictions correctes =75.0%
+* Pourcentage de faux positifs =25.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =50.0%
+
+. 500 époques :
+* Pourcentage de prédictions correctes =100.0%
+* Pourcentage de faux positifs =0.0%
+* Pourcentage de faux négatifs =0.0%
+* Pourcentage de vrais positifs =25.0%
+* Pourcentage de vrais négatifs =75.0%

@@ -54,11 +54,11 @@ public class NNLib {
   }
   
   /**
-   * Normalisation des attributs numériques
+   * Normalisation des attributs numériques matrice X (input)
    * @param data	données à traiter
    * @param indices	tableau contenant les indices des colonnes à normaliser
    */
-  public static void normalize(float[][] data, int[] indices) {
+  public static void normalizeX(float[][] data, int[] indices) {
 	  float moyenne=0.f, e_type=0.f;
 	  for(int i=0; i<indices.length;i++) {
 		  //calcul de la moyenne
@@ -78,6 +78,33 @@ public class NNLib {
 		  }
 	  }
   }
+  
+  /**
+   * Normalisation des attributs numériques matrice data
+   * @param data	données à traiter
+   * @param indices	tableau contenant les indices des colonnes à normaliser
+   */
+  public static void normalize(float[][] data, int[] indices) {
+	  float moyenne=0.f, e_type=0.f;
+	  for(int i=0; i<indices.length;i++) {
+		  //calcul de la moyenne
+		  for(int k=0;k<data.length;k++) {
+			  moyenne+=data[k][indices[i]];
+		  }
+		  moyenne=moyenne/data[0].length;
+		  //calcul de l'écart-type
+		  for(int k=0;k<data[0].length;k++) {
+			  e_type+=Math.pow((data[k][indices[i]]-moyenne), 2);
+		  }
+		  e_type=e_type/data[0].length;
+		  e_type=(float) Math.sqrt(e_type);
+		  //Normalisation
+		  for(int k=0;k<data[0].length;k++) {
+			  data[k][indices[i]]=(data[k][indices[i]]-moyenne)/e_type;
+		  }
+	  }
+  }
+  
   /**
    * Compute the derivative of tanh function
    * 

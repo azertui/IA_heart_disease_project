@@ -165,7 +165,6 @@ public class NeuralNet {
         	FP++;
       }
     cost = -(1.f/batchSize)*cost;
-    System.out.println("test: "+(countPredictions));
     System.out.println("Pourcentage de prédictions correctes ="+(((float)countPredictions)/(float)batchSize)*100.0f);
     System.out.println("Pourcentage de faux positifs ="+(((float)FP)/(float)batchSize)*100.0f);
     System.out.println("Pourcentage de faux négatifs ="+(((float)FN)/(float)batchSize)*100.0f);
@@ -223,7 +222,6 @@ public class NeuralNet {
     			if(NNLib.checkPrediction(A2,Y_train,i))
     				t++;
     		}
-    		System.out.println("training: "+t);
     	}
     	//Mise a jour des paramÃ¨tres
     	W2=NNLib.subtract(W2, NNLib.mult(dW2, this.eta));
@@ -235,7 +233,7 @@ public class NeuralNet {
     		bmid=NNLib.subtract(bmid, NNLib.mult(dbmid, this.eta));
     	}
     }
-    return testPrediction();
+    return 0;
   }
   
   /**
@@ -245,9 +243,9 @@ public class NeuralNet {
   public void train(int nbEpoch){
     String trainingProgress = "";
     for (int e = 0; e < nbEpoch; e++){
-      System.out.println(" [ Epoch " +e+ "]");
       trainingProgress += e + "," + trainingEpoch() + "\n";
     }
+    System.out.println(""+testPrediction());
     // Export the error per epoch in output file
     DataLib.exportDataToCSV("training.out", trainingProgress);
   }
